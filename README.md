@@ -294,3 +294,6 @@ otherwise you will get out-of-sync with older data!
 * Support for platform-specific flags (f.e. INSERT DELAYED for MySQL?)
 * Cross-database queries.
 * UNION query object (depends on subquery support).
+* Text GIT upload =)
+
+
