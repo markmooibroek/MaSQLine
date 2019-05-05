@@ -63,6 +63,14 @@ class ExpressionBuilder {
   }
   
   
+  public function notEqualTo($column_expr, $value, $type = NULL) {
+    return $this->simpleCondition($column_expr, '%s != ?', $value, $type);
+  }
+  public function neq($column_expr, $value, $type = NULL) {
+    return $this->notEqualTo($column_expr, $value, $type);
+  } 
+  
+  
   public function greaterThan($column_expr, $value, $type = NULL) {
     return $this->simpleCondition($column_expr, '%s > ?', $value, $type);
   }
@@ -118,6 +126,11 @@ class ExpressionBuilder {
   public function isNull($column_expr) {
     return $this->simpleCondition($column_expr, '%s IS NULL');
   }
+  
+  public function isNotNull($column_expr) {
+    return $this->simpleCondition($column_expr, '%s IS NOT NULL');
+  }
+	
   public function null($column_expr) {
     return $this->isNull($column_expr);
   }

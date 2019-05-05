@@ -97,6 +97,14 @@ class SelectQuery extends FetchQuery {
     return $this;
   }
   
+   public function selectSUM($col_expr = NULL, $alias = NULL) {
+    if ($col_expr === NULL) {
+      $col_expr = Expression::raw('*');
+    }
+    $this->getClause('SELECT')->addAggregateColumn('SUM', $col_expr, $alias, 'integer');
+    
+    return $this;
+  }
   
   public function from($table_name) {
     if (is_array($table_name)) {
