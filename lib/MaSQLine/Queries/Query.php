@@ -75,4 +75,6 @@ abstract class Query extends Expression {
     
     return $this->table_aliases[$table_name];
   }
+
+  abstract function where(Expression $expr);
 }

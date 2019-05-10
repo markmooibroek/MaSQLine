@@ -55,4 +55,9 @@ class InsertQuery extends ManipulationQuery {
       return $schema->getTable($table_name)->getColumn($column_name)->getType();
     }, array_keys($this->values));
   }
+
+    function where(Expression $expr)
+    {
+        // INSERT doesnt support WHERE's
+    }
 }

@@ -3,6 +3,8 @@ namespace MaSQLine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Exception;
+use MaSQLine\Queries\Query;
 use MaSQLine\Queries\SelectQuery;
 use MaSQLine\Queries\InsertQuery;
 use MaSQLine\Queries\UpdateQuery;
@@ -39,8 +41,11 @@ class DB {
       self::$default_alias = NULL;
     }
   }
-  
-  
+
+    /**
+     * @param $alias
+     * @return static
+     */
   public static function get($alias) {
     if (!array_key_exists($alias, self::$instances)) {
       throw new \InvalidArgumentException(sprintf("No connection registered with alias '%s'.", $alias));
@@ -52,8 +57,10 @@ class DB {
     
     return self::$instances[$alias];
   }
-  
-  
+
+    /**
+     * @return static
+     */
   public static function getDefault() {
     if (self::$default_alias === NULL) {
       throw new \RuntimeException("No default database is set.");
@@ -62,13 +69,11 @@ class DB {
     return self::get(self::$default_alias);
   }
   
-  
+  /** @var Connection  */
   private $conn;
+  /** @var Schema  */
   private $schema;
-  
-  private $expression_builder;
-  
-  
+
   public function __construct(Connection $conn, Schema $schema) {
     $this->conn = $conn;
     $this->schema = $schema;
@@ -103,17 +108,18 @@ class DB {
   public function createDeleteQuery($table_name) {
     return new DeleteQuery($this->conn, $this->schema, $table_name);
   }
-  
-  
-  /**
-   * Wrapper around {@link \Doctrine\DBAL\Connection\transactional()} that injects this
-   * instance into the transaction closure instead of the Connection instance.
-   *
-   * @param \Closure $transaction A closure that receives this instance as its first argument. Should perform
-   *                              all statements that comprise the transaction.
-   * @return void
-   * @throws Exception
-   */
+
+
+    /**
+     * Wrapper around {@link \Doctrine\DBAL\Connection\transactional()} that injects this
+     * instance into the transaction closure instead of the Connection instance.
+     *
+     * @param \Closure $transaction A closure that receives this instance as its first argument. Should perform
+     *                              all statements that comprise the transaction.
+     * @return void
+     * @throws Exception
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
   public function transactional(\Closure $transaction) {
     $this->conn->beginTransaction();
     try {
@@ -168,7 +174,7 @@ class DB {
   }
   
   
-  private function applyEqualsConditionsToQuery($query, $table_name, array $conditions) {
+  private function applyEqualsConditionsToQuery(Query $query, $table_name, array $conditions) {
     if (count($conditions) == 0) {
       return;
     }
