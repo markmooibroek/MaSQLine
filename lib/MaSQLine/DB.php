@@ -131,8 +131,12 @@ class DB {
       throw $e;
     }
   }
-  
-  
+
+    /**
+     * @param $table_name
+     * @param array $conditions
+     * @return SelectQuery
+     */
   public function simpleSelect($table_name, array $conditions = array()) {
     $query = $this->createSelectQuery()
       ->select(sprintf('%s.*', $table_name))
