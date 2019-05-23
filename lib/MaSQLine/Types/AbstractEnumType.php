@@ -27,8 +27,7 @@ abstract class AbstractEnumType extends SmallIntType {
     if ($index === NULL) {
       return NULL;
     }
-    
-    assert('isset(static::$values[$index])');
+
     if (!isset(static::$values[$index])) {
       return $index;
     }
@@ -43,8 +42,7 @@ abstract class AbstractEnumType extends SmallIntType {
     }
     
     $index = array_search($value, static::$values);
-    
-    assert('$index !== false');
+
     if ($index === false) {
       return $value;
     }

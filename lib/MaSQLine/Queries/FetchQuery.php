@@ -88,7 +88,6 @@ abstract class FetchQuery extends Query
         $conversion_types = $this->getConversionTypes();
         $converted_row = array();
         foreach ($row as $key => $value) {
-            assert('array_key_exists($key, $conversion_types)');
             $type = $conversion_types[$key];
             $converted_row[$key] = $type->convertToPHPValue($value, $this->conn->getDatabasePlatform());
         }
